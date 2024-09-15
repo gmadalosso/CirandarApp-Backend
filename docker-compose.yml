@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo-data:/data/db
+
+  node-api-ts:
+    build: .
+    container_name: cirandarapp-api-node-api-ts
+    ports:
+      - '5001:5001'
+    environment:
+      - PORT=5001
+      - MONGO_URI=mongodb://mongo:27017/cirandarDB
+    depends_on:
+      - mongo
+    networks:
+      - default
+
+volumes:
+  mongo-data:
+    driver: local
