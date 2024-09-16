@@ -43,6 +43,27 @@ export const getBibliotecas = async (req: Request, res: Response) => {
   }
 };
 
+// Get a single biblioteca by ID (accessible by all users)
+export const getBibliotecaById = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+  
+      const biblioteca = await Biblioteca.findById(id);
+  
+      if (!biblioteca) {
+        return res.status(404).json({ message: 'Biblioteca não encontrada' });
+      }
+  
+      return res.json({
+        message: 'Biblioteca recuperada com sucesso',
+        biblioteca,
+      });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: 'Erro no servidor ao recuperar a biblioteca' });
+    }
+  };  
+
 // Update a biblioteca (Admin only)
 export const updateBiblioteca = [isAdmin, async (req: Request, res: Response) => {
   try {

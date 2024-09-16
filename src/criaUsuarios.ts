@@ -8,14 +8,14 @@ const seedUsers = async () => {
   try {
     await Usuario.deleteMany({});
 
-    const testUserPassword = 'test123456';
+    const testUserPassword = 'teste123456';
     const adminUserPassword = 'admin123456';
 
     const testUser = new Usuario({
       nomeCompleto: 'Test User',
       dataNascimento: new Date('1990-01-01'),
       cpf: '11122233344',
-      email: 'teste@examplo.com',
+      email: 'teste@exemplo.com',
       telefone: '1111111111',
       senha: testUserPassword,
       aceitaTermos: true,
@@ -26,7 +26,7 @@ const seedUsers = async () => {
       nomeCompleto: 'Admin User',
       dataNascimento: new Date('1990-01-01'),
       cpf: '55566677788',
-      email: 'admin@examplo.com',
+      email: 'admin@exemplo.com',
       telefone: '2222222222',
       senha: adminUserPassword,
       aceitaTermos: true,
@@ -36,7 +36,7 @@ const seedUsers = async () => {
     await testUser.save();
     await adminUser.save();
 
-    console.log('Seed users created successfully!');
+    console.log('Usuários de teste criados com sucesso!');
   } catch (error) {
     console.error('Error creating seed users:', error);
   }

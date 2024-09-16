@@ -4,12 +4,22 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Login function with session storage
 export const loginUsuario = async (req: Request, res: Response) => {
   const { email, senha } = req.body;
 
+  console.log('Request Body LOGIN:', req.body); // Logging request body
+  console.log('Request Body EMAIL:', req.body.email); // Logging request body
+  console.log('Request Body SENHA:', req.body.senha); // Logging request body
+
+  // Validate email and senha are not undefined or empty
+  if (!email || !senha) {
+    console.log('Validation Error: E-mail or senha missing');  // Additional logging
+    return res.status(400).json({ message: 'E-mail e senha são campos obrigatórios' });
+  }
+
   try {
     const usuario = await Usuario.findOne({ email });
+    console.log("USUARIO: " + JSON.stringify(usuario))
 
     if (!usuario) {
       return res.status(400).json({ message: 'Usuário não encontrado' });
@@ -27,7 +37,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
       role: usuario.role,
     };
 
-    console.log("Session user: " + JSON.stringify(req.session.user));
+    console.log('Session user: ', req.session.user);
 
     // Return success response
     return res.json({
@@ -43,6 +53,7 @@ export const loginUsuario = async (req: Request, res: Response) => {
     return res.status(500).json({ message: 'Erro no servidor' });
   }
 };
+
 
 // Get all usuarios (admin or user)
 export const getUsuarios = async (req: Request, res: Response) => {

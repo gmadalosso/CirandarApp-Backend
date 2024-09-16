@@ -4,22 +4,35 @@ import { connectDB } from './database';
 import usuarioRoutes from './routes/usuarioRoutes';
 import session from 'express-session';
 import bibliotecaRoutes from './routes/bibliotecaRoutes';
+import cors from 'cors'; // Import cors
+import seedUsers from './criaUsuarios';
 
 dotenv.config();
 
 const app = express();
 app.use(express.json());
 
-// Connect to the database
-connectDB();
+// Enable CORS for all routes and origins
+app.use(cors({
+  origin: 'http://localhost:8100', // Your frontend URL (Ionic)
+  credentials: true // Allow credentials (such as cookies and sessions)
+}));
 
-// Configure session middleware (this needs to be before routes that use session)
+// Configure session middleware only once
 app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultsecret', // Secret key to sign session ID cookie
   resave: false, // Forces session to be saved even when unmodified
   saveUninitialized: false, // Don't save an empty session if it hasn't been modified
-  cookie: { secure: false, maxAge: 24 * 60 * 60 * 1000 } // Secure false for HTTP, maxAge 1 day
+  cookie: { 
+    secure: false,  // Must be false for HTTP
+    sameSite: 'lax', // Adjust SameSite as per your needs
+    maxAge: 24 * 60 * 60 * 1000 // Session expiry (1 day)
+  }
 }));
+
+// Connect to the database
+connectDB();
+seedUsers();
 
 // Profile route should come after session is configured
 app.get('/profile', (req, res) => {
@@ -30,16 +43,14 @@ app.get('/profile', (req, res) => {
   }
 });
 
+// Logout route
 app.post('/logout', (req, res) => {
-  // Destroy the session stored on the server
   req.session.destroy((err) => {
     if (err) {
-      // Handle the error if session destruction fails
       return res.status(500).json({ message: 'Erro ao encerrar a sessão' });
     }
 
-    // Clear the session cookie in the user's browser
-    res.clearCookie('connect.sid'); // Default cookie name for sessions
+    res.clearCookie('connect.sid'); // Clear session cookie in the browser
     return res.json({ message: 'Logout bem-sucedido' });
   });
 });
