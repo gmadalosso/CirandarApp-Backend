@@ -1,15 +1,13 @@
 import { Request, Response } from 'express';
-import Biblioteca from '../models/Biblioteca'; // Assuming Biblioteca model is already defined
+import Biblioteca from '../models/Biblioteca';
 
-// Middleware to check if the user is an admin
 const isAdmin = (req: Request, res: Response, next: Function) => {
   if (req.session.user && req.session.user.role === 'admin') {
-    return next(); // Proceed if the user is an admin
+    return next(); 
   }
   return res.status(403).json({ message: 'Acesso negado: Apenas administradores podem realizar esta ação.' });
 };
 
-// Create a new biblioteca (Admin only)
 export const createBiblioteca = [isAdmin, async (req: Request, res: Response) => {
   try {
     const { nome, endereco, contato, horario } = req.body;
@@ -29,7 +27,6 @@ export const createBiblioteca = [isAdmin, async (req: Request, res: Response) =>
   }
 }];
 
-// Get all bibliotecas (accessible by all users)
 export const getBibliotecas = async (req: Request, res: Response) => {
   try {
     const bibliotecas = await Biblioteca.find({});
@@ -43,7 +40,6 @@ export const getBibliotecas = async (req: Request, res: Response) => {
   }
 };
 
-// Get a single biblioteca by ID (accessible by all users)
 export const getBibliotecaById = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
@@ -64,7 +60,6 @@ export const getBibliotecaById = async (req: Request, res: Response) => {
     }
   };  
 
-// Update a biblioteca (Admin only)
 export const updateBiblioteca = [isAdmin, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -88,7 +83,6 @@ export const updateBiblioteca = [isAdmin, async (req: Request, res: Response) =>
   }
 }];
 
-// Delete a biblioteca (Admin only)
 export const deleteBiblioteca = [isAdmin, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
