@@ -4,6 +4,7 @@ O CirandarApp é um aplicativo desenvolvido para a cadeira de Programação de D
 
 Alunos participantes:
 - Álvaro Souza Pereira da Silva
+- Bruno de Araujo Fonseca
 - Carla Viganigo Rangel de Castilhos
 - Gabriela Madalosso
 - Hierro de Almeida Zaro
