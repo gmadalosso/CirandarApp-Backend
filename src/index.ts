@@ -12,10 +12,14 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-app.use(cors({
-  origin: 'http://localhost:8100', 
-  credentials: true 
-}));
+const corsOptions = {
+  origin: ['http://localhost:8100', 'http://10.0.2.2'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
+
+app.use(cors(corsOptions));
 
 app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultsecret', 
@@ -39,7 +43,7 @@ app.get('/profile', (req, res) => {
   }
 });
 
-app.post('/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ message: 'Erro ao encerrar a sessão' });
