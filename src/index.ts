@@ -12,13 +12,15 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// CORS 
-app.use(cors({
-  origin: 'http://localhost:8100',  
-  credentials: true  
-}));
+const corsOptions = {
+  origin: ['http://localhost:8100', 'http://10.0.2.2'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+};
 
-// Configuração das sessões
+app.use(cors(corsOptions));
+
 app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultsecret', 
   resave: false, 
@@ -38,11 +40,9 @@ app.options('*', (req, res) => {
   res.sendStatus(200); 
 });
 
-// Conecta ao banco de dados e cria usuários teste
 connectDB();
 seedUsers();
 
-// Route de Profile (sessão)
 app.get('/profile', (req, res) => {
   if (req.session.user) {
     res.json({ message: 'User Profile', user: req.session.user });
@@ -51,8 +51,7 @@ app.get('/profile', (req, res) => {
   }
 });
 
-// Route de Logout
-app.post('/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
   req.session.destroy((err) => {
     if (err) {
       return res.status(500).json({ message: 'Erro ao encerrar a sessão' });
@@ -62,10 +61,8 @@ app.post('/logout', (req, res) => {
   });
 });
 
-// Routes da API
 app.use('/api/', usuarioRoutes);
 app.use('/api/', bibliotecaRoutes); 
 
-// Inicia servidor
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
