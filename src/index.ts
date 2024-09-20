@@ -14,8 +14,8 @@ app.use(express.json());
 
 // CORS 
 app.use(cors({
-  origin: 'http://localhost:8100',  // Frontend origin
-  credentials: true  // Allow credentials (cookies)
+  origin: 'http://localhost:8100',  
+  credentials: true  
 }));
 
 // Configuração das sessões
@@ -24,9 +24,9 @@ app.use(session({
   resave: false, 
   saveUninitialized: false, 
   cookie: { 
-    secure: false,  // Should be true in production with HTTPS
-    sameSite: 'lax',  // Allows cross-site cookies in development
-    maxAge: 24 * 60 * 60 * 1000  // 1 day expiration
+    secure: false,  
+    sameSite: 'lax',  
+    maxAge: 24 * 60 * 60 * 1000  
   }
 }));
 
@@ -35,7 +35,7 @@ app.options('*', (req, res) => {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-  res.sendStatus(200); // Respond with OK
+  res.sendStatus(200); 
 });
 
 // Conecta ao banco de dados e cria usuários teste
