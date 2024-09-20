@@ -21,7 +21,6 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 
-// Configuração das sessões
 app.use(session({
   secret: process.env.SESSION_SECRET || 'defaultsecret', 
   resave: false, 
@@ -41,11 +40,9 @@ app.options('*', (req, res) => {
   res.sendStatus(200); 
 });
 
-// Conecta ao banco de dados e cria usuários teste
 connectDB();
 seedUsers();
 
-// Route de Profile (sessão)
 app.get('/profile', (req, res) => {
   if (req.session.user) {
     res.json({ message: 'User Profile', user: req.session.user });
@@ -64,10 +61,8 @@ app.post('/api/logout', (req, res) => {
   });
 });
 
-// Routes da API
 app.use('/api/', usuarioRoutes);
 app.use('/api/', bibliotecaRoutes); 
 
-// Inicia servidor
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
